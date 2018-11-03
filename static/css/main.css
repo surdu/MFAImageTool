@@ -1,0 +1,38 @@
+body {
+	background-color: #2e2f35;
+	color: #fff;
+}
+
+#previewColumn {
+	float: left;
+	padding: 20px;
+	padding-bottom: 0;
+	padding-right: 40px;
+}
+
+	#previewColumn h4 {
+		text-align: center;
+	}
+
+	#preview {
+		border: 2px solid black;
+		image-rendering: optimizeSpeed;
+	}
+
+	#workCanvas {
+		display: none;
+	}
+
+
+#ioColumn {
+	padding-top: 60px;
+}
+
+	#ioColumn textarea {
+		width: 50%;
+	}
+
+#optionsRow {
+	clear: left;
+	padding: 20px;
+}
