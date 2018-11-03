@@ -50,7 +50,9 @@ function render() {
 
 	var byte = "";
 	var data = [];
-	var lastNonZeoIndex = 0;
+	var firstNonZeroIndex;
+	var lastNonZeroIndex = 0;
+
 	for (var f = 0; f < imageData.length / 4; f++) {
 		// calculate crude color indicator
 		var color = imageData[f * 4] + imageData[(f * 4) + 1] + imageData[(f * 4) + 2];
@@ -74,17 +76,36 @@ function render() {
 			byte = "";
 
 			if (value !== 0) {
-				lastNonZeoIndex = data.length -1;
+				if (firstNonZeroIndex === undefined) {
+					firstNonZeroIndex = data.length - 1;
+				}
+
+				lastNonZeroIndex = data.length - 1;
 			}
 		}
 	}
 
-	// trim tailing zeroess
-	data.splice(lastNonZeoIndex + 1);
+	var nearestRowStart = 0;
+	// trim front zeroes
+	if (firstNonZeroIndex) {
+		nearestRowStart = firstNonZeroIndex - firstNonZeroIndex % 8;
+		data.splice(0, nearestRowStart);
+	}
+
+	// trim tailing zeroes
+	if (lastNonZeroIndex !== data.length - 1) {
+		lastNonZeroIndex -= nearestRowStart;
+		var nextRowEnd = (lastNonZeroIndex - lastNonZeroIndex % 8) + 8;
+		data.splice(nextRowEnd + 1);
+	}
+
+
+	var startY = nearestRowStart / 8;
+	var height = Math.ceil(data.length / 8) - 1;
 
 	output.value =
 `uint8_t image[${data.length}] = {${data.join(",")}};
-MFA.GraphicFromArray(0, 0, 64, ${Math.ceil((data.length * 8) / 64)}, image, 0);
+MFA.GraphicFromArray(0, ${startY}, 64, ${height}, image);
 `;
 }
 
