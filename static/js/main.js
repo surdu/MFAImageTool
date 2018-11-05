@@ -99,13 +99,14 @@ function render() {
 		data.splice(nextRowEnd + 1);
 	}
 
-
 	var startY = nearestRowStart / 8;
 	var height = Math.ceil(data.length / 8) - 1;
 
 	output.value =
-`uint8_t image[${data.length}] = {${data.join(",")}};
-MFA.GraphicFromArray(0, ${startY}, 64, ${height}, image);
+`void drawBootImage(MFA mfa) {
+	uint8_t bootImage[${data.length}] = {${data.join(",")}};
+	mfa.drawImage(0, ${startY}, 64, ${height}, bootImage);
+}
 `;
 }
 
